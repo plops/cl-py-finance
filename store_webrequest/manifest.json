@@ -1,0 +1,14 @@
+{
+    "manifest_version": 2,
+    "name": "store_webrequest",
+    "version": "1.0",
+    "description": "store",
+    "background": {
+        "scripts": [
+            "background.js"
+        ]
+    },
+    "permissions": [
+        "webRequest"
+    ]
+}
