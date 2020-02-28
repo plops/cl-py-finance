@@ -60,23 +60,32 @@
 	  
 	  
 	  (do0
+	   (do0
+	     ;; disable image loading
+	    (setf firefox_profile (selenium.webdriver.FirefoxProfile))
+	    ;; this is not working in firefox after 2014 or so
+	     #+nil (firefox_profile.set_preference (string "permissions.default.image")
+					     2))
 	   (do0 ;; open browser and log in
-	    (setf driver (selenium.webdriver.Firefox)
+	    (setf driver (selenium.webdriver.Firefox :firefox_profile firefox_profile)
 		  wait (selenium.webdriver.support.wait.WebDriverWait driver 30))
-	    (driver.install_addon (string "/tmp/store_webrequest.xpi")
-				  :temporary True)
+	    
+	    (do0 
+	     ;; install extension
+	     (driver.install_addon (string "/tmp/store_webrequest.xpi")
+				  :temporary True))
 	    (driver.get (string "https://finance.yahoo.com/quote/NVD.F")
 			)
-	    (dot (sel (string ".btn.primary")
-		      )
+	    ;; click away the cookie notification
+	    (dot (sel (string ".btn.primary"))
 		 (click))
 	   
 	    #+ni (dot (sel (string ".btn-google")) ;; click google
 		 (click))
 
 	    #+ni (dot (waitsel (string "#identifierId")) ;; enter email
-		 (send_keys (string "bla")))
-	    )
+		 (send_keys (string "bla"))))
+	   
 	   (do0
 	    #+nil (dot (waitsel (string "a[href='#/hour-registration']"))
 		       (click))

@@ -25,7 +25,8 @@ def wait_css_clickable(css):
 def waitsel(css):
     wait_css_clickable(css)
     return sel(css)
-driver=selenium.webdriver.Firefox()
+firefox_profile=selenium.webdriver.FirefoxProfile()
+driver=selenium.webdriver.Firefox(firefox_profile=firefox_profile)
 wait=selenium.webdriver.support.wait.WebDriverWait(driver, 30)
 driver.install_addon("/tmp/store_webrequest.xpi", temporary=True)
 driver.get("https://finance.yahoo.com/quote/NVD.F")
