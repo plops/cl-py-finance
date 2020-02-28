@@ -8,6 +8,12 @@
 
 ;; install a webextension in browser instance:
 ;; https://intoli.com/blog/firefox-extensions-with-selenium/
+;; intercept xhr web requests:
+;; https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Intercept_HTTP_requests
+;; https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/WebRequest
+;; onCompleted
+;; URL: https://query1.finance.yahoo.com/v8/finance/chart/NVD.F?region=US&lang=en-US&includePrePost=false&interval=2m&range=1d&corsDomain=finance.yahoo.com&.tsrc=finance
+;; cd store_webrequest; zip /tmp/store_webrequest.xpi *.js *.json
 (let* ((code
 	`(do0
 	  "#!/usr/bin/env python3"
@@ -57,7 +63,8 @@
 	   (do0 ;; open browser and log in
 	    (setf driver (selenium.webdriver.Firefox)
 		  wait (selenium.webdriver.support.wait.WebDriverWait driver 30))
-	   
+	    (driver.install_addon (string "/tmp/store_webrequest.xpi")
+				  :temporary True)
 	    (driver.get (string "https://finance.yahoo.com/quote/NVD.F")
 			)
 	    (dot (sel (string ".btn.primary")

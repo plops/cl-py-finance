@@ -27,5 +27,6 @@ def waitsel(css):
     return sel(css)
 driver=selenium.webdriver.Firefox()
 wait=selenium.webdriver.support.wait.WebDriverWait(driver, 30)
+driver.install_addon("/tmp/store_webrequest.xpi", temporary=True)
 driver.get("https://finance.yahoo.com/quote/NVD.F")
 sel(".btn.primary").click()
