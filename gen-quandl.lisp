@@ -9,7 +9,7 @@
   (let* ((code
 	  `(do0
 	    "#!/usr/bin/env python3"
-	    "# pip3 install --user mplfinance"
+	    "# pip3 install --user mplfinance quandl"
 	    (do0
 	     (do0
 	      (imports ((plt matplotlib.pyplot)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# pip3 install --user mplfinance
+# pip3 install --user mplfinance quandl
 import matplotlib.pyplot as plt
 import mplfinance as mpf
 plt.ion()
