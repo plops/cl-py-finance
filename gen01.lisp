@@ -88,4 +88,6 @@
 	    ))))
        )
   (write-source (format nil "~a/source/run_01_get_euronext" *path*)
-	 code))
+		code)
+  (sb-ext:run-program "/bin/sh" (list
+				 (format nil "~a/package_extension.sh" *path*))))
