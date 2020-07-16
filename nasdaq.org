@@ -1,0 +1,211 @@
+
+- request for realtime trades:
+
+#+begin_example
+curl 'https://api.nasdaq.com/api/quote/LITE/realtime-trades?&limit=20&fromTime=00:00' \
+  -H 'authority: api.nasdaq.com' \
+  -H 'accept: application/json, text/plain, */*' \
+  -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36' \
+  -H 'origin: https://www.nasdaq.com' \
+  -H 'sec-fetch-site: same-site' \
+  -H 'sec-fetch-mode: cors' \
+  -H 'sec-fetch-dest: empty' \
+  -H 'referer: https://www.nasdaq.com/market-activity/stocks/lite/latest-real-time-trades' \
+  -H 'accept-language: en-US,en;q=0.9' \
+  --compressed
+#+end_example
+
+- python requests, converted with https://curl.trillworks.com/
+
+#+begin_example
+import requests
+
+headers = {
+    'authority': 'api.nasdaq.com',
+    'accept': 'application/json, text/plain, */*',
+    'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36',
+    'origin': 'https://www.nasdaq.com',
+    'sec-fetch-site': 'same-site',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-dest': 'empty',
+    'referer': 'https://www.nasdaq.com/market-activity/stocks/lite/latest-real-time-trades',
+    'accept-language': 'en-US,en;q=0.9',
+}
+
+params = (
+    ('', ''),
+    ('limit', '20'),
+    ('fromTime', '00:00'),
+)
+
+response = requests.get('https://api.nasdaq.com/api/quote/LITE/realtime-trades', headers=headers, params=params)
+
+#NB. Original query string below. It seems impossible to parse and
+#reproduce query strings 100% accurately so the one below is given
+#in case the reproduced version is not "correct".
+# response = requests.get('https://api.nasdaq.com/api/quote/LITE/realtime-trades?&limit=20&fromTime=00:00', headers=headers)
+
+#+end_example
+
+- request as fetch
+#+begin_example
+fetch("https://api.nasdaq.com/api/quote/LITE/realtime-trades?&limit=20&fromTime=00:00", {
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-site"
+  },
+  "referrer": "https://www.nasdaq.com/market-activity/stocks/lite/latest-real-time-trades",
+  "referrerPolicy": "no-referrer-when-downgrade",
+  "body": null,
+  "method": "GET",
+  "mode": "cors",
+  "credentials": "omit"
+});
+#+end_example
+
+- request as node.js fetch
+#+begin_example
+fetch("https://api.nasdaq.com/api/quote/LITE/realtime-trades?&limit=20&fromTime=00:00", {
+  "headers": {
+    "accept": "application/json, text/plain, */*",
+    "accept-language": "en-US,en;q=0.9",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-site"
+  },
+  "referrer": "https://www.nasdaq.com/market-activity/stocks/lite/latest-real-time-trades",
+  "referrerPolicy": "no-referrer-when-downgrade",
+  "body": null,
+  "method": "GET",
+  "mode": "cors"
+});
+#+end_example
+
+- response:
+
+#+begin_example
+{
+   "data":{
+      "symbol":"lite",
+      "totalRecords":100,
+      "offset":0,
+      "limit":20,
+      "headers":{
+         "nlsTime":"NLS Time (ET)",
+         "nlsPrice":"NLS Price",
+         "nlsShareVolume":"NLS Share Volume"
+      },
+      "rows":[
+         {
+            "nlsTime":"09:54:48",
+            "nlsPrice":"$ 81.47",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:54:48",
+            "nlsPrice":"$ 81.48",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:54:15",
+            "nlsPrice":"$ 81.6",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:54:06",
+            "nlsPrice":"$ 81.48",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:54:02",
+            "nlsPrice":"$ 81.665",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:54:01",
+            "nlsPrice":"$ 81.49",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:54:01",
+            "nlsPrice":"$ 81.46",
+            "nlsShareVolume":"200"
+         },
+         {
+            "nlsTime":"09:54:01",
+            "nlsPrice":"$ 81.46",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:54:00",
+            "nlsPrice":"$ 81.49",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:53:10",
+            "nlsPrice":"$ 81.54",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:53:05",
+            "nlsPrice":"$ 81.46",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:53:05",
+            "nlsPrice":"$ 81.46",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:52:57",
+            "nlsPrice":"$ 81.525",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:52:55",
+            "nlsPrice":"$ 81.53",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:52:46",
+            "nlsPrice":"$ 81.41",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:52:28",
+            "nlsPrice":"$ 81.31",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:52:28",
+            "nlsPrice":"$ 81.32",
+            "nlsShareVolume":"156"
+         },
+         {
+            "nlsTime":"09:52:28",
+            "nlsPrice":"$ 81.32",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:52:11",
+            "nlsPrice":"$ 81.26",
+            "nlsShareVolume":"100"
+         },
+         {
+            "nlsTime":"09:51:46",
+            "nlsPrice":"$ 81.3585",
+            "nlsShareVolume":"100"
+         }
+      ]
+   },
+   "message":null,
+   "status":{
+      "rCode":200,
+      "bCodeMessage":null,
+      "developerMessage":null
+   }
+}
+#+end_example
