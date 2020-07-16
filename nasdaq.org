@@ -38,7 +38,7 @@ params = (
     ('fromTime', '00:00'),
 )
 
-response = requests.get('https://api.nasdaq.com/api/quote/LITE/realtime-trades', headers=headers, params=params)
+response = requests.get('https://api.nasdaq.com/api/quote/LITE/realtime-trades, headers=headers, params=params)
 
 #NB. Original query string below. It seems impossible to parse and
 #reproduce query strings 100% accurately so the one below is given
@@ -209,3 +209,30 @@ fetch("https://api.nasdaq.com/api/quote/LITE/realtime-trades?&limit=20&fromTime=
    }
 }
 #+end_example
+
+- how to access data
+#+begin_example
+d['data']['rows']
+#+end_example
+
+
+- read 100 rows at two different timepoints
+- try to merge
+
+#+begin_export 
+>>> c[(c.nlsShareVolume_x != c.nlsShareVolume_y)]
+     nlsTime   nlsPrice_x nlsShareVolume_x             request_time_x   nlsPrice_y nlsShareVolume_y             request_time_y
+20  15:14:22    $ 1503.74              100 2020-07-16 21:15:13.345747  $ 1503.8799              150 2020-07-16 21:16:22.599059
+22  15:14:22  $ 1503.8799              150 2020-07-16 21:15:13.345747    $ 1503.74              100 2020-07-16 21:16:22.599059
+24  15:14:22  $ 1503.8799              150 2020-07-16 21:15:13.345747    $ 1503.77              100 2020-07-16 21:16:22.599059
+26  15:14:22    $ 1503.77              100 2020-07-16 21:15:13.345747  $ 1503.8799              150 2020-07-16 21:16:22.599059
+30  15:14:14  $ 1503.3313              100 2020-07-16 21:15:13.345747  $ 1503.2438              736 2020-07-16 21:16:22.599059
+31  15:14:14  $ 1503.3313              100 2020-07-16 21:15:13.345747    $ 1504.05              192 2020-07-16 21:16:22.599059
+32  15:14:14  $ 1503.2438              736 2020-07-16 21:15:13.345747  $ 1503.3313              100 2020-07-16 21:16:22.599059
+34  15:14:14  $ 1503.2438              736 2020-07-16 21:15:13.345747    $ 1504.05              192 2020-07-16 21:16:22.599059
+35  15:14:14    $ 1504.05              192 2020-07-16 21:15:13.345747  $ 1503.3313              100 2020-07-16 21:16:22.599059
+36  15:14:14    $ 1504.05              192 2020-07-16 21:15:13.345747  $ 1503.2438              736 2020-07-16 21:16:22.599059
+64  15:13:47   $ 1504.655              160 2020-07-16 21:15:13.345747    $ 1505.00              165 2020-07-16 21:16:22.599059
+65  15:13:47    $ 1505.00              165 2020-07-16 21:15:13.345747   $ 1504.655              160 2020-07-16 21:16:22.599059
+
+#+end_export

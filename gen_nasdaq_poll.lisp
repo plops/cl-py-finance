@@ -12,6 +12,7 @@
 	  (do0
 	   (imports (
 		     datetime
+		     time
 		     calendar
 		     (pd pandas)
 		     (np numpy)
@@ -25,7 +26,8 @@
 				     `(string ,e))))
 
 
-	   (def get_ticks (symbol &key (time (string "00:00")))
+	   (def get_ticks (symbol &key (time (string "00:00"))
+				  (limit 100))
 	    (setf headers (dict ,@(loop for (k v) in `((authority api.nasdaq.com)
 						       (accept "application/json, text/plain, */*")
 						       (user-agent "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
@@ -39,7 +41,9 @@
 				     collect
 				       `((string ,k) (string ,v)))))
 	    (setf params (tuple (tuple (string "") (string ""))
-				(tuple (string "limit") (string "20"))
+				(tuple (string "limit") (dot (string "{}")
+							     (format limit)) ; (string "20")
+				       )
 				(tuple (string "fromTime") time ;(string "00:00")
 				       )))
 
@@ -49,9 +53,15 @@
 					 :headers headers
 					 :params params))
 	    (setf ticks (json.loads response.text))
-	    (return ticks))
-	   (def run (&key (time (string "00:00")))
-	    (print (json.dumps (get_ticks (aref symbols 0) :time time) :indent 2)))
+	    (setf df (dot (pd.DataFrame (aref (aref ticks (string "data"))
+					     (string "rows")))
+			  (set_index (string "nlsTime"))))
+	    (setf (aref df (string "request_time")) (pd.Timestamp.now))
+	    (return df))
+	   (def run (&key (time (string "00:00")) (limit 20))
+	     ;(print (json.dumps (get_ticks (aref symbols 0) :time time) :indent 2))
+	     (print (get_ticks (aref symbols 0) :time time :limit limit))
+	     )
 	   )
 	  ))
        )
