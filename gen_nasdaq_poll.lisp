@@ -18,25 +18,40 @@
 		     time
 		     pathlib
 		     re
-		     requests)))
+		     requests
+		     json)))
 	  (do0
-	   (setf stocks (list ,@(loop for e in `(LITE NVDA AMD ASML INTC BDX) collect
+	   (setf symbols (list ,@(loop for e in `(LITE NVDA AMD ASML INTC BDX) collect
 				     `(string ,e))))
-	   (setf headers (dict ,@(loop for (k v) in `((authority api.nasdaq.com)
-						      (accept "application/json, text/plain, */*")
-						      (user-agent "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
-						      (origin "https://www.nasdaq.com")
-						      (sec-fetch-site "same-site")
-						      (sec-fetch-mode  "cors")
-						      (sec-fetch-dest "empty")
-						      (referer 
-						       "https://www.nasdaq.com/market-activity/stocks/lite/latest-real-time-trades")
-						      (accept-language "en-US,en;q=0.9"))
-				    collect
-				      `((string ,k) (string ,v)))))
-	   (setf params (tuple (tuple (string "") (string ""))
-			       (tuple (string "limit") (string "20"))
-			       (tuple (string "fromTime") (string "00:00"))))
+
+
+	   (def get_ticks (symbol &key (time (string "00:00")))
+	    (setf headers (dict ,@(loop for (k v) in `((authority api.nasdaq.com)
+						       (accept "application/json, text/plain, */*")
+						       (user-agent "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Mobile Safari/537.36")
+						       (origin "https://www.nasdaq.com")
+						       (sec-fetch-site "same-site")
+						       (sec-fetch-mode  "cors")
+						       (sec-fetch-dest "empty")
+						       (referer 
+							"https://www.nasdaq.com/market-activity/stocks/lite/latest-real-time-trades")
+						       (accept-language "en-US,en;q=0.9"))
+				     collect
+				       `((string ,k) (string ,v)))))
+	    (setf params (tuple (tuple (string "") (string ""))
+				(tuple (string "limit") (string "20"))
+				(tuple (string "fromTime") time ;(string "00:00")
+				       )))
+
+	    
+	    (setf response (requests.get (dot (string "https://api.nasdaq.com/api/quote/{}/realtime-trades")
+					      (format symbol))
+					 :headers headers
+					 :params params))
+	    (setf ticks (json.loads response.text))
+	    (return ticks))
+	   (def run (&key (time (string "00:00")))
+	    (print (json.dumps (get_ticks (aref symbols 0) :time time) :indent 2)))
 	   )
 	  ))
        )
