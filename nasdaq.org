@@ -251,7 +251,7 @@ nlsTime
 
 - try again
 #+begin_example
-most recent response:
+# most recent response:
 
 >>> b[0:8]
     nlsTime    nlsPrice nlsShareVolume               request_time
@@ -262,11 +262,11 @@ most recent response:
 4  15:50:35   $ 1492.04            200 2020-07-16 21:51:16.656989
 5  15:50:34   $ 1491.45            100 2020-07-16 21:51:16.656989
 6  15:50:34   $ 1492.17            100 2020-07-16 21:51:16.656989
-7  15:50:33   $ 1491.50            100 2020-07-16 21:51:16.656989
+7  15:50:33   $ 1491.50            100 2020-07-16 21:51:16.656989   (*)
 8  15:50:33   $ 1490.82            300 2020-07-16 21:51:16.656989
 
 
-older response:
+# older response:
 
 >>> a
      nlsTime   nlsPrice nlsShareVolume               request_time
@@ -284,10 +284,28 @@ older response:
 
 [100 rows x 4 columns]
 
-row 7 in b is identical to row 0 in a
+# row 7 in b is identical to row 0 in a. 
 
 >>> first_identical
     nlsTime   nlsPrice nlsShareVolume               request_time
 7  15:50:33  $ 1491.50            100 2020-07-16 21:51:16.656989
->>> 
+
+# for a complete trade history i will have to merge b[:6] and a
+
+>>> b[:first_identical.index[0]].append(a)[0:12]
+    nlsTime    nlsPrice nlsShareVolume               request_time
+0  15:50:38  $ 1492.835            100 2020-07-16 21:51:16.656989
+1  15:50:36   $ 1493.60          1,000 2020-07-16 21:51:16.656989
+2  15:50:35   $ 1493.55            100 2020-07-16 21:51:16.656989
+3  15:50:35   $ 1493.55            100 2020-07-16 21:51:16.656989
+4  15:50:35   $ 1492.04            200 2020-07-16 21:51:16.656989
+5  15:50:34   $ 1491.45            100 2020-07-16 21:51:16.656989
+6  15:50:34   $ 1492.17            100 2020-07-16 21:51:16.656989
+0  15:50:33   $ 1491.50            100 2020-07-16 21:51:11.485160
+1  15:50:33   $ 1490.82            300 2020-07-16 21:51:11.485160
+2  15:50:33   $ 1491.01            196 2020-07-16 21:51:11.485160
+3  15:50:33   $ 1490.82            487 2020-07-16 21:51:11.485160
+4  15:50:33   $ 1491.06            100 2020-07-16 21:51:11.485160
+
+
 #+end_example
