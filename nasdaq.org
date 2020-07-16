@@ -309,3 +309,68 @@ nlsTime
 
 
 #+end_example
+
+
+- this is the response outside of opening hours:
+
+#+begin_example
+>>> a
+     nlsTime  nlsPrice nlsShareVolume               request_time
+0   16:00:01  $ 405.39            602 2020-07-16 22:04:06.310595
+1   16:00:01  $ 405.39            109 2020-07-16 22:04:06.310595
+2   16:00:01  $ 405.39            237 2020-07-16 22:04:06.310595
+3   16:00:01  $ 405.39            110 2020-07-16 22:04:06.310595
+4   16:00:01  $ 405.39            500 2020-07-16 22:04:06.310595
+..       ...       ...            ...                        ...
+95  16:00:01  $ 405.39              9 2020-07-16 22:04:06.310595
+96  16:00:01  $ 405.39          4,691 2020-07-16 22:04:06.310595
+97  16:00:01  $ 405.39             82 2020-07-16 22:04:06.310595
+98  16:00:01  $ 405.39             15 2020-07-16 22:04:06.310595
+99  16:00:01  $ 405.39             55 2020-07-16 22:04:06.310595
+
+[100 rows x 4 columns]
+>>> b
+     nlsTime  nlsPrice nlsShareVolume               request_time
+0   16:00:01  $ 405.39            602 2020-07-16 22:04:11.493776
+1   16:00:01  $ 405.39            109 2020-07-16 22:04:11.493776
+2   16:00:01  $ 405.39            237 2020-07-16 22:04:11.493776
+3   16:00:01  $ 405.39            110 2020-07-16 22:04:11.493776
+4   16:00:01  $ 405.39            500 2020-07-16 22:04:11.493776
+..       ...       ...            ...                        ...
+95  16:00:01  $ 405.39              9 2020-07-16 22:04:11.493776
+96  16:00:01  $ 405.39          4,691 2020-07-16 22:04:11.493776
+97  16:00:01  $ 405.39             82 2020-07-16 22:04:11.493776
+98  16:00:01  $ 405.39             15 2020-07-16 22:04:11.493776
+99  16:00:01  $ 405.39             55 2020-07-16 22:04:11.493776
+
+[100 rows x 4 columns]
+>>> first_identical
+    nlsTime  nlsPrice nlsShareVolume               request_time
+0  16:00:01  $ 405.39            602 2020-07-16 22:04:11.493776
+
+#+end_example
+
+- the api url on github 
+https://gist.github.com/ranaroussi/4010b0bd32d7f4712705177f455ab016
+
+#+begin_example
+def get_premarket(ticker):
+    """ 
+    gets premarket prices from nasdaq
+    
+    usage:
+    >> price, volume = get_premarket('spy')
+    
+    """
+    
+    url = 'https://api.nasdaq.com/api/quote/%s/extended-trading?assetclass=etf&markettype=pre'
+    data = requests.get(url % ticker.upper()).json()['data']
+    
+    if data['infoTable']['rows']:
+        volume = int(data['infoTable']['rows'][0]['volume'].replace(',', ''))
+        price = float(data['tradeDetailTable']['rows'][0]['price'].replace('$', '').replace(',', ''))
+        return price, volume
+    
+    # no premarket trading, return last price with 0 volume
+    return float(data['previousInfo'].split('$')[1]), 0
+#+end_example

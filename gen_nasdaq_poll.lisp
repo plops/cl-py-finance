@@ -22,7 +22,7 @@
 		     requests
 		     json)))
 	  (do0
-	   (setf symbols (list ,@(loop for e in `(TSLA LITE NVDA AMD ASML INTC BDX) collect
+	   (setf symbols (list ,@(loop for e in `(NVDA TSLA LITE AMD ASML INTC BDX) collect
 				     `(string ,e))))
 
 
@@ -49,7 +49,7 @@
 				(tuple (string "fromTime") timestamp ;(string "00:00")
 				       )))
 
-	    
+	    ;; after-hours-trades
 	    (setf response (requests.get (dot (string "https://api.nasdaq.com/api/quote/{}/realtime-trades")
 					      (format symbol))
 					 :headers headers
@@ -67,20 +67,38 @@
 	     ;(print (json.dumps (get_ticks (aref symbols 0) :time time) :indent 2))
 	     (print (get_ticks (aref symbols 0) :timestamp timestamp :limit limit))
 	     )
+	   (setf delay 5)
 
-	   (setf symb (aref symbols 0))
-	   (setf a (get_ticks symb :limit 100))
-	   (time.sleep 5)
-	   (setf b (get_ticks symb :limit 100))
+	   (do0 
+	    (setf symb (aref symbols 0))
 
-	   (setf compare_cols (aref a.columns (list 0 1 2)))
-	   (comments "find the row in b that is identical to the most recent row in a") 
-	   (setf first_identical
-		 (aref b
-		       (dot (== (aref b compare_cols)
-				(aref (dot a (aref iloc 0))
-				      compare_cols))
-			    (all :axis 1))))
+	    (setf a (get_ticks symb :limit 100))
+	    (a.to_csv (dot (string "{}_data.csv")
+			   (format symb)))
+	    (time.sleep delay)
+	     
+	    (do0
+	     (setf b (get_ticks symb :limit 100))
+
+	     (setf compare_cols (aref a.columns (list 0 1 2)))
+	     
+	     (comments "find the row in b that is identical to the most recent row in a") 
+
+	     (setf first_identical
+		   (aref b
+			 (dot (== (aref b compare_cols)
+				  (aref (dot a (aref iloc 0))
+					compare_cols))
+			      (all :axis 1))))
+	     
+	     (comments "if we have more than 50 new trades, decrease the delay, so that the next response contains less trades")
+	     (comments "if we have less than 4 new trades, increase the delay but keep it above 5sec")
+	     (if (< 50 first_identical)
+		 (setf delay (* .5 delay))
+		 (when (< first_identical 4)
+		   (setf delay (np.minimum 5 (* 1.2 delay)))))
+	     (time.sleep delay))
+	    )
 	   )
 	  ))
        )
