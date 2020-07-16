@@ -350,6 +350,9 @@ nlsTime
 
 #+end_example
 
+
+- premarket:
+
 - the api url on github 
 https://gist.github.com/ranaroussi/4010b0bd32d7f4712705177f455ab016
 
@@ -374,3 +377,54 @@ def get_premarket(ticker):
     # no premarket trading, return last price with 0 volume
     return float(data['previousInfo'].split('$')[1]), 0
 #+end_example
+
+- example https://api.nasdaq.com/api/quote/spy/extended-trading?assetclass=etf&markettype=pre
+
+#+begin_example
+ 
+#1
+VALID (RFC 8259)
+Formatted JSON Data
+{
+   "data":{
+      "previousInfo":"Jul. 15, 2020 Market Close: $321.85",
+      "sessionText":"",
+      "infoTable":{
+         "headers":{
+            "volume":"Pre-Market Share Volume",
+            "highPrice":"Pre-Market High",
+            "lowPrice":"Pre-Market Low"
+         },
+         "rows":[
+            {
+               "volume":"1,795,458",
+               "highPrice":"$321.85",
+               "lowPrice":"$318.92"
+            }
+         ]
+      },
+      "tradeDetailTable":{
+         "headers":{
+            "time":"Pre-Market Time (ET)",
+            "price":"Pre-Market Price",
+            "shareVolume":"Pre-Market Share Volume"
+         },
+         "rows":[
+            {
+               "time":"09:30:00",
+               "price":"$319.79",
+               "shareVolume":"100"
+            },
+            {
+               "time":"09:30:00",
+               "price":"$319.78",
+               "shareVolume":"100"
+            },
+            {
+               "time":"09:30:00",
+               "price":"$319.79",
+               "shareVolume":"100"
+#+end_example
+
+- after hours website doesn't seem to load data with api
+https://www.nasdaq.com/market-activity/stocks/nvda/after-hours
