@@ -236,3 +236,14 @@ d['data']['rows']
 65  15:13:47    $ 1505.00              165 2020-07-16 21:15:13.345747   $ 1504.655              160 2020-07-16 21:16:22.599059
 
 #+end_export
+
+- joining this data is quite difficult
+- nlsTime isn't a unique key
+#+begin_example
+>>> a
+             nlsPrice nlsShareVolume               request_time
+nlsTime                                                        
+15:14:30   $ 1503.985            100 2020-07-16 21:15:13.345747
+15:14:29    $ 1503.98            100 2020-07-16 21:15:13.345747
+15:14:29    $ 1503.97            100 2020-07-16 21:15:13.345747
+#+end_example
