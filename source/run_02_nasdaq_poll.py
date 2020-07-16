@@ -7,3 +7,4 @@ import time
 import pathlib
 import re
 import requests
+stocks=["LITE", "NVDA", "AMD", "ASML", "INTC", "BDX"]

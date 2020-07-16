@@ -19,6 +19,10 @@
 		     pathlib
 		     re
 		     requests)))
+	  (do0
+	   (setf stocks (list ,@(loop for e in `(LITE NVDA AMD ASML INTC BDX) collect
+				     `(string ,e))))
+	   )
 	  ))
        )
   (write-source (format nil "~a/source/run_02_nasdaq_poll" *path*)
